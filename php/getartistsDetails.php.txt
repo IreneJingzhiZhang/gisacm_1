@@ -1,0 +1,60 @@
+  <?php
+   
+   if(isset($_POST['submit']) && $_POST['submit'] == 'getDetails')
+   {
+	$dsn = "mysql:host=localhost;dbname=world";    
+	$password = "zhang";
+	$username = "root";   
+	$searchtext = trim($_POST['stext']);
+	
+	try
+	{ 
+	 $pdo = new PDO($dsn, $username, $password);
+	 if(empty($searchtext))
+		$query = "SELECT * FROM Artist";
+	 else if (is_numeric ($searchtext))
+		$query = "SELECT * FROM Artist WHERE artistID in($searchtext)";	
+	 $stmt = $pdo->prepare($query);
+	 $stmt->execute();
+	 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	 $count = $stmt->rowCount();
+	 
+	 if($count > 0){
+		 echo '<table class="table">
+    <thead>
+      <tr>       
+        <th>First Name</th>
+		<th>Last Name</th>
+		<th>Address</th>
+		<th>Email</th>
+		<th>Phone</th>
+		<th>conRate</th>        
+      </tr>
+    </thead>
+    <tbody>';
+	  foreach($rows as $row)
+	  {
+		  echo '<tr class="success">';		 
+		  echo '<td> '. $row[artistfName] .' </td>';
+		  echo '<td> '. $row[artistlName]  .' </td>';
+		  echo '<td> '. $row[artistAddress] .' </td>';
+		  echo '<td> '. $row[artistEmail]  .' </td>';
+		  echo '<td> '. $row[artistPhone]  .' </td>';
+		  echo '<td> '. $row[artistconRate]  .' </td>';
+		  echo '</tr>';
+	  }
+	  echo '</tbody>';
+	  echo '</table>';
+	  	 }
+	 else{
+	  
+	  echo "Customer doesn't exists"; // wrong details 
+	 }
+	  
+	}
+	catch(PDOException $e){
+	 echo $e->getMessage();
+	}
+   }  
+  
+  ?>

@@ -1,0 +1,56 @@
+  <?php
+   
+   if(isset($_POST['submit']) && $_POST['submit'] == 'getDetails')
+   {
+	$dsn = "mysql:host=localhost;dbname=world";    
+	$password = "zhang";
+	$username = "root";   
+	$searchtext = trim($_POST['stext']);
+	
+	try
+	{ 
+	 $pdo = new PDO($dsn, $username, $password);
+	 if(empty($searchtext))
+		$query = "SELECT * FROM vendor";
+	 else if (is_numeric ($searchtext))
+		$query = "SELECT * FROM vendor WHERE vendorID in($searchtext)";	
+	 $stmt = $pdo->prepare($query);
+	 $stmt->execute();
+	 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	 $count = $stmt->rowCount();
+	 
+	 if($count > 0){
+		 echo '<table class="table">
+    <thead>
+      <tr>       
+		<th>Name</th>
+		<th>Address</th>
+		<th>Email</th>
+		<th>Phone</th>		     
+      </tr>
+    </thead>
+    <tbody>';
+	  foreach($rows as $row)
+	  {
+		  echo '<tr class="success">';		 
+		  echo '<td> '. $row[vendorName] .' </td>';		  
+		  echo '<td> '. $row[vendorAddress] .' </td>';
+		  echo '<td> '. $row[vendorEmail]  .' </td>';
+		  echo '<td> '. $row[vendorPhone]  .' </td>';		
+		  echo '</tr>';
+	  }
+	  echo '</tbody>';
+	  echo '</table>';
+	  	 }
+	 else{
+	  
+	  echo "Customer doesn't exists"; // wrong details 
+	 }
+	  
+	}
+	catch(PDOException $e){
+	 echo $e->getMessage();
+	}
+   }  
+  
+  ?>

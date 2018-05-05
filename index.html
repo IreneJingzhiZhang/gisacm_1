@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Simple Sidebar - Start Bootstrap Template</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/simple-sidebar.css" rel="stylesheet">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="js/jquery.js"></script>  
+    <script src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap-multiselect.js"></script>
+	<link rel="stylesheet" href="css/bootstrap-multiselect.css" type="text/css"/>
+<script>
+
+$(document).ready(function()
+{
+$('#managerDetails,#artitsDetails,#bandDetails,#vendorsDetails').click(function(e)
+{
+e.preventDefault();
+
+var detailsId = this.id;
+alert(detailsId);
+var temp = "";
+if(detailsId == 'managerDetails')
+temp = "eventManager";
+if(detailsId == 'artitsDetails')
+temp = "eventArtist";
+if(detailsId == 'bandDetails')
+temp = "eventBand";
+if(detailsId == 'vendorsDetails')
+temp = "eventVendor";
+alert($("#"+temp+" option:selected").text());
+$.ajax({
+type:"post",
+dataType: "text",
+url:"../php/get"+detailsId+".php",
+data:{submit:"getDetails",stext:$("#"+temp+" option:selected").text()},
+success:function(res)
+{
+$('#detailsDiv').html(res);
+$('#detailsModal').modal('show');	
+
+},
+error:function(data)
+{
+alert(data);
+}
+
+
+});
+
+});
+
+$('#eventVendor').multiselect();
+$('#eventArtist').multiselect();
+$('#eventManager').multiselect();
+$('#eventBand').multiselect();
+
+});
+
+</script>
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">
+                        GISA CM
+                    </a>
+                </li>
+                <li>
+                    <a href="#">Create Event</a>
+                </li>
+                <li>
+                    <a href="#">Approve Event</a>
+                </li>  
+				<li>
+                    <a href="#">Generate Report</a>
+                </li>   				
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+					<h1> Create Event</h1>
+						<form id="createEvent">
+							<div class="form-group">
+								<label for="eventName">Name</label>
+								<input type="text" class="form-control" id="eventName" placeholder="Enter Event Name">								
+						    </div>
+							<fieldset disabled>
+							<div class="form-group">
+								<label for="eventStatus">Status</label>
+								<input type="text disabled" class="form-control" id="eventStatus" placeholder="New Event">								
+						    </div>
+							</fieldset>
+							<div class="form-group">
+								<label for="eventDate">Date</label>
+								<input type="text" class="form-control" id="eventDate" placeholder="Event Date">
+							</div>
+							<div class="form-group">
+								<label for="eventLocation">Location</label>
+								<select class="form-control" id="eventLocation">
+								  <option>1</option>
+								  <option>2</option>
+								  <option>3</option>
+								  <option>4</option>
+								  <option>5</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="eventManager">Manager :</label>
+								<select multiple="multiple" class="form-control" id="eventManager">
+								  <option>1</option>
+								  <option>2</option>
+								  <option>3</option>
+								  <option>4</option>
+								  <option>5</option>
+								</select>
+								<button id="managerDetails" class="btn btn-info btn-xs">View Details</button>
+							</div>
+							
+							<div class="form-group">							
+								<label for="eventArtist">Artists&nbsp&nbsp&nbsp&nbsp:</label>
+								<select multiple="multiple" class="form-control"  id="eventArtist">
+								  <option>1</option>
+								  <option>2</option>
+								  <option>3</option>
+								  <option>4</option>
+								  <option>5</option>
+								</select>
+								<button id="artitsDetails" class="btn btn-info btn-xs">View Details</button>
+							</div>
+							<div class="form-group">							
+								<label for="eventBand">Band&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp:</label>
+								<select multiple="multiple" class="form-control" id="eventBand">
+								  <option>1</option>
+								  <option>2</option>
+								  <option>3</option>
+								  <option>4</option>
+								  <option>5</option>
+								</select>
+								<button  id="bandDetails" class="btn btn-info btn-xs">View Details</button>
+							</div>
+							<div class="form-group">							
+								<label for="eventVendor">Vendors :</label>
+								<select multiple="multiple" class="form-control" id="eventVendor">
+								  <option>1</option>
+								  <option>2</option>
+								  <option>3</option>
+								  <option>4</option>
+								  <option>5</option>
+								</select>
+								<button  id="vendorsDetails" class="btn btn-info btn-xs">View Details</button>
+							</div>						    
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->  
+   
+		<div id="detailsModal" class="modal fade" role="dialog">
+		  <div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Modal Header</h4>
+			  </div>
+			  <div class="modal-body" id="detailsDiv">
+				
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			  </div>
+			</div>
+			</div>
+		</div>
+
+</body>
+
+</html>

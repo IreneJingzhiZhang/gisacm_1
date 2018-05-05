@@ -1,0 +1,60 @@
+  <?php
+   
+   if(isset($_POST['submit']) && $_POST['submit'] == 'getDetails')
+   {
+	$dsn = "mysql:host=localhost;dbname=world";    
+	$password = "zhang";
+	$username = "root";   
+	$searchtext = trim($_POST['stext']);
+	
+	try
+	{ 
+	 $pdo = new PDO($dsn, $username, $password);
+	 if(empty($searchtext))
+		$query = "SELECT * FROM Band";
+	 else if (is_numeric ($searchtext))
+		$query = "SELECT * FROM Band WHERE bandID in($searchtext)";	
+	 $stmt = $pdo->prepare($query);
+	 $stmt->execute();
+	 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	 $count = $stmt->rowCount();
+	 
+	 if($count > 0){
+		 echo '<table class="table">
+    <thead>
+      <tr>
+		<th>Band Name</th>	
+		<th>Members</th>		
+        <th>Leader First Name</th>
+		<th>Leader Last Name</th>		
+		<th>Phone</th>
+		<th>conRate</th>        
+      </tr>
+    </thead>
+    <tbody>';
+	  foreach($rows as $row)
+	  {
+		  echo '<tr class="success">';
+		  echo '<td> '. $row[bandName] .' </td>';
+		  echo '<td> '. $row[members] .' </td>';
+		  echo '<td> '. $row[leaderfName] .' </td>';
+		  echo '<td> '. $row[leaderlName]  .' </td>';		  
+		  echo '<td> '. $row[leaderPhone]  .' </td>';
+		  echo '<td> '. $row[artistconRate]  .' </td>';
+		  echo '</tr>';
+	  }
+	  echo '</tbody>';
+	  echo '</table>';
+	  	 }
+	 else{
+	  
+	  echo "Customer doesn't exists"; // wrong details 
+	 }
+	  
+	}
+	catch(PDOException $e){
+	 echo $e->getMessage();
+	}
+   }  
+  
+  ?>
